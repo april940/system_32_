@@ -1,0 +1,63 @@
+#pip install Pyro5 or pip install Pyro5[ns]
+
+
+import Pyro5.api
+
+
+@Pyro5.api.expose
+class StringConcatenationServer:
+    def concatenate_strings(self, str1, str2):
+        result = str1 + str2
+        return result
+
+
+def main():
+    daemon = Pyro5.api.Daemon()
+    ns = Pyro5.api.locate_ns()
+
+    uri = daemon.register(StringConcatenationServer)
+    ns.register("string_concatenation_server", uri)
+
+    print("Server is ready.")
+    daemon.requestLoop()
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+"""
+D:/4th Year/8th semister/Distributed computing lab/Assig 2
+pyro5-ns
+python server.py
+python client.py
+"""
+
+
+
+
+
+
+
+
+
+
+import Pyro5.api
+
+
+def main():
+    uri = "PYRONAME:string_concatenation_server"
+    with Pyro5.api.Proxy(uri) as server:
+        str1 = input("Enter the first string: ")
+        str2 = input("Enter the second string: ")
+
+        result = server.concatenate_strings(str1, str2)
+        print(f"Concatenation result: {result}")
+
+
+if __name__ == "__main__":
+    main()
+
+    

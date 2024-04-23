@@ -1,0 +1,50 @@
+import xmlrpc.server
+
+def calculate_factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * calculate_factorial(n - 1)
+
+class FactorialServer(xmlrpc.server.SimpleXMLRPCServer):
+    def __init__(self, address):
+        super().__init__(address)
+        self.register_function(calculate_factorial, 'factorial')
+
+def main():
+    server_address = ('localhost', 8000)
+    server = FactorialServer(server_address)
+    print("Factorial server is listening on port 8000...")
+    server.serve_forever()
+
+if __name__ == "__main__":
+    main()
+
+"""
+D:/4th Year/8th semister/Distributed computing lab/Assig 1
+python server.py
+python client.py
+"""
+
+
+
+
+
+
+
+
+
+
+import xmlrpc.client
+
+def main():
+    proxy = xmlrpc.client.ServerProxy("http://localhost:8000/")
+    try:
+        num = int(input("Enter a number to calculate its factorial: "))
+        result = proxy.factorial(num)
+        print(f"The factorial of {num} is: {result}")
+    except ValueError:
+        print("Please enter a valid integer.")
+
+if __name__ == "__main__":
+    main()
